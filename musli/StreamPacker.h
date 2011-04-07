@@ -17,31 +17,33 @@ namespace musli
         
         ~StreamPacker();
         
-        virtual void pack_bool(bool value);
+        virtual void pack(bool value);
         
-        virtual void pack_char(char value);
+        virtual void pack(char value);
         
-        virtual void pack_unsigned_char(unsigned char value);
+        virtual void pack(unsigned char value);
         
-        virtual void pack_short(short value);
+        virtual void pack(short value);
         
-        virtual void pack_unsigned_short(unsigned short value);
+        virtual void pack(unsigned short value);
         
-        virtual void pack_int(int value);
+        virtual void pack(int value);
                 
-        virtual void pack_unsigned_int(unsigned int value);
+        virtual void pack(unsigned int value);
         
-        virtual void pack_long(long value);
+        virtual void pack(long value);
         
-        virtual void pack_unsigned_long(unsigned long value);
+        virtual void pack(unsigned long value);
         
-        virtual void pack_long_long(long long value);
+        virtual void pack(long long value);
         
-        virtual void pack_unsigned_long_long(unsigned long long value);
+        virtual void pack(unsigned long long value);
         
-        virtual void pack_float(float value);
+        virtual void pack(float value);
         
-        virtual void pack_double(double value);
+        virtual void pack(double value);
+        
+        virtual void pack(const std::string& value);
         
     private:
         std::ostream& stream;

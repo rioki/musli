@@ -17,31 +17,33 @@ namespace musli
         
         ~StreamUnpacker();
         
-        virtual bool unpack_bool();
+        virtual void unpack(bool& value);
         
-        virtual char unpack_char();
+        virtual void unpack(char& value);
         
-        virtual unsigned char unpack_unsigned_char();
+        virtual void unpack(unsigned char& value);
         
-        virtual short unpack_short();
+        virtual void unpack(short& value);
         
-        virtual unsigned short unpack_unsigned_short();
+        virtual void unpack(unsigned short& value);
         
-        virtual int unpack_int();
-        
-        virtual unsigned int unpack_unsigned_int();
-        
-        virtual long unpack_long();
-        
-        virtual unsigned long unpack_unsigned_long();
-        
-        virtual long long unpack_long_long();
-        
-        virtual unsigned long long unpack_unsigned_long_long();
+        virtual void unpack(int& value);
                 
-        virtual float unpack_float();
+        virtual void unpack(unsigned int& value);
         
-        virtual double unpack_double();
+        virtual void unpack(long& value);
+        
+        virtual void unpack(unsigned long& value);
+        
+        virtual void unpack(long long& value);
+        
+        virtual void unpack(unsigned long long& value);
+        
+        virtual void unpack(float& value);
+        
+        virtual void unpack(double& value);
+        
+        virtual void unpack(std::string& value);
         
     private:
         std::istream& stream;

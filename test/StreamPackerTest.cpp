@@ -5,6 +5,7 @@
 #include "StreamUnpacker.h"
 
 #include <sstream>
+#include <string>
 #include <UnitTest++/UnitTest++.h>
 
 SUITE(StreamPackerTest)
@@ -101,5 +102,21 @@ SUITE(StreamPackerTest)
         CHECK_EQUAL(ullong_orig, ullong_copy);
         CHECK_EQUAL(float_orig, float_copy);
         CHECK_EQUAL(double_orig, double_copy);
+    }
+
+//------------------------------------------------------------------------------
+    TEST(pack_string)
+    {
+        std::stringstream stream;
+        musli::StreamPacker packer(stream);
+        musli::StreamUnpacker unpacker(stream);
+        
+        std::string orig = "Make mine a Murphy's!";
+        std::string copy;
+        
+        packer << orig;
+        unpacker >> copy;
+        
+        CHECK_EQUAL(orig, copy);
     }
 }

@@ -16,88 +16,103 @@ namespace musli
 
 //------------------------------------------------------------------------------
     template <typename Type>
-    inline Type unpack_pod(std::istream& is)
+    inline void unpack_pod(std::istream& is, Type& value)
     {
-        Type value;
         is.read(reinterpret_cast<char*>(&value), sizeof(Type));
-        return value;
     }
         
 //------------------------------------------------------------------------------
-    bool StreamUnpacker::unpack_bool()
+    void StreamUnpacker::unpack(bool& value)
     {
-        return unpack_pod<bool>(stream);
+        unpack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    char StreamUnpacker::unpack_char()
+    void StreamUnpacker::unpack(char& value)
     {
-        return unpack_pod<char>(stream);
+        unpack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    unsigned char StreamUnpacker::unpack_unsigned_char()
+    void StreamUnpacker::unpack(unsigned char& value)
     {
-        return unpack_pod<unsigned char>(stream);
+        unpack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    short StreamUnpacker::unpack_short()
+    void StreamUnpacker::unpack(short& value)
     {
-        return unpack_pod<short>(stream);
+        unpack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    unsigned short StreamUnpacker::unpack_unsigned_short()
+    void StreamUnpacker::unpack(unsigned short& value)
     {
-        return unpack_pod<unsigned short>(stream);
+        unpack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    int StreamUnpacker::unpack_int()
+    void StreamUnpacker::unpack(int& value)
     {
-        return unpack_pod<int>(stream);
+        unpack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    unsigned int StreamUnpacker::unpack_unsigned_int()
+    void StreamUnpacker::unpack(unsigned int& value)
     {
-        return unpack_pod<unsigned int>(stream);
+        unpack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    long StreamUnpacker::unpack_long()
+    void StreamUnpacker::unpack(long& value)
     {
-        return unpack_pod<long>(stream);
+        unpack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    unsigned long StreamUnpacker::unpack_unsigned_long()
+    void StreamUnpacker::unpack(unsigned long& value)
     {
-        return unpack_pod<unsigned long>(stream);
+        unpack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    long long StreamUnpacker::unpack_long_long()
+    void StreamUnpacker::unpack(long long& value)
     {
-        return unpack_pod<long long>(stream);
+        unpack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    unsigned long long StreamUnpacker::unpack_unsigned_long_long()
+    void StreamUnpacker::unpack(unsigned long long& value)
     {
-        return unpack_pod<unsigned long long>(stream);
+        unpack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    float StreamUnpacker::unpack_float()
+    void StreamUnpacker::unpack(float& value)
     {
-        return unpack_pod<float>(stream);
+        unpack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    double StreamUnpacker::unpack_double()
+    void StreamUnpacker::unpack(double& value)
     {
-        return unpack_pod<double>(stream);
+        unpack_pod(stream, value);
+    }
+
+//------------------------------------------------------------------------------
+    void StreamUnpacker::unpack(std::string&  value)
+    {
+        unsigned int size = 0;
+        unpack(size);
+        if (size != 0)
+        {
+            char buff[size];
+            stream.read(buff, size);
+            value = std::string(buff, size);
+        }
+        else
+        {
+            value = std::string();
+        }
     }
 }

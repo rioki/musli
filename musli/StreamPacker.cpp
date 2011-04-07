@@ -22,80 +22,91 @@ namespace musli
     }
     
 //------------------------------------------------------------------------------
-    void StreamPacker::pack_bool(bool value)
+    void StreamPacker::pack(bool value)
     {
         pack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    void StreamPacker::pack_char(char value)
+    void StreamPacker::pack(char value)
     {
         pack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    void StreamPacker::pack_unsigned_char(unsigned char value)
+    void StreamPacker::pack(unsigned char value)
     {
         pack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    void StreamPacker::pack_short(short value)
+    void StreamPacker::pack(short value)
     {
         pack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    void StreamPacker::pack_unsigned_short(unsigned short value)
+    void StreamPacker::pack(unsigned short value)
     {
         pack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    void StreamPacker::pack_int(int value)
+    void StreamPacker::pack(int value)
     {
         pack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    void StreamPacker::pack_unsigned_int(unsigned int value)
+    void StreamPacker::pack(unsigned int value)
     {
         pack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    void StreamPacker::pack_long(long value)
+    void StreamPacker::pack(long value)
     {
         pack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    void StreamPacker::pack_unsigned_long(unsigned long value)
+    void StreamPacker::pack(unsigned long value)
     {
         pack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    void StreamPacker::pack_long_long(long long value)
+    void StreamPacker::pack(long long value)
     {
         pack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    void StreamPacker::pack_unsigned_long_long(unsigned long long value)
+    void StreamPacker::pack(unsigned long long value)
     {
         pack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    void StreamPacker::pack_float(float value)
+    void StreamPacker::pack(float value)
     {
         pack_pod(stream, value);
     }
     
 //------------------------------------------------------------------------------
-    void StreamPacker::pack_double(double value)
+    void StreamPacker::pack(double value)
     {
         pack_pod(stream, value);
+    }
+
+//------------------------------------------------------------------------------
+    void StreamPacker::pack(const std::string&  value)
+    {
+        unsigned int size = value.size();
+        pack(size);
+        if (size != 0)
+        {
+            stream.write(&value[0], size);
+        }
     }
 }
