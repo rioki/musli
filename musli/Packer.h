@@ -4,7 +4,11 @@
 #ifndef _MUSLI_PACKER_H_
 #define _MUSLI_PACKER_H_
 
+#include <algorithm>
 #include <string>
+#include <vector>
+#include <list>
+#include <deque>
 
 namespace musli
 {
@@ -50,7 +54,45 @@ namespace musli
     private:
         Packer(const Packer&);
         const Packer& operator = (const Packer&);
-    };  
+    };
+        
+    struct pack_single
+    {
+        Packer& packer;
+        
+        pack_single(Packer& p)
+        : packer(p) {}
+        
+        template <typename Type>
+        void operator () (Type type)
+        {
+            packer << type;
+        }
+    };
+    
+    template <typename Type>
+    Packer& operator << (Packer& packer, const std::vector<Type>& values)
+    {
+        unsigned int size = values.size();
+        packer << size;
+        std::for_each(values.begin(), values.end(), pack_single(packer));
+    }
+    
+    template <typename Type>
+    Packer& operator << (Packer& packer, const std::list<Type>& values)
+    {
+        unsigned int size = values.size();
+        packer << size;
+        std::for_each(values.begin(), values.end(), pack_single(packer));        
+    }
+    
+    template <typename Type>
+    Packer& operator << (Packer& packer, const std::deque<Type>& values)
+    {
+        unsigned int size = values.size();
+        packer << size;
+        std::for_each(values.begin(), values.end(), pack_single(packer));        
+    }
 }
 
 #endif

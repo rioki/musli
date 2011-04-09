@@ -4,7 +4,11 @@
 #ifndef _MUSLI_UNPACKER_H_
 #define _MUSLI_UNPACKER_H_
 
+#include <algorithm>
 #include <string>
+#include <vector>
+#include <list>
+#include <deque>
 
 namespace musli
 {
@@ -51,6 +55,47 @@ namespace musli
         Unpacker(const Unpacker&);
         const Unpacker& operator = (const Unpacker&);
     };
+    
+    struct unpack_single
+    {
+        Unpacker& unpacker;
+        
+        unpack_single(Unpacker& u)
+        : unpacker(u) {}
+        
+        template <typename Type>
+        void operator () (Type& type)
+        {
+            unpacker >> type;
+        }
+    };
+    
+    template <typename Type>
+    Unpacker& operator >> (Unpacker& unpacker, std::vector<Type>& values)
+    {
+        unsigned int size;
+        unpacker >> size;
+        values.resize(size);
+        std::for_each(values.begin(), values.end(), unpack_single(unpacker));
+    }
+    
+    template <typename Type>
+    Unpacker& operator >> (Unpacker& unpacker, std::list<Type>& values)
+    {
+        unsigned int size;
+        unpacker >> size;
+        values.resize(size);
+        std::for_each(values.begin(), values.end(), unpack_single(unpacker));
+    }
+    
+    template <typename Type>
+    Unpacker& operator >> (Unpacker& unpacker, std::deque<Type>& values)
+    {
+        unsigned int size;
+        unpacker >> size;
+        values.resize(size);
+        std::for_each(values.begin(), values.end(), unpack_single(unpacker));
+    }
 }
 
 #endif
