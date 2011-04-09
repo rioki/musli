@@ -3,11 +3,11 @@
   <Project Name="musli" Path="musli/musli.project" Active="No"/>
   <Project Name="test" Path="test/test.project" Active="Yes"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="no">
+    <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Project Name="musli" ConfigName="Debug"/>
       <Project Name="test" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="yes">
+    <WorkspaceConfiguration Name="Release" Selected="no">
       <Project Name="musli" ConfigName="Release"/>
       <Project Name="test" ConfigName="Release"/>
     </WorkspaceConfiguration>

@@ -10,6 +10,7 @@
   <VirtualDirectory Name="src">
     <File Name="main.cpp"/>
     <File Name="StreamPackerTest.cpp"/>
+    <File Name="MemoryPackerTest.cpp"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="musli"/>
@@ -37,7 +38,7 @@
         <Library Value="../$(ConfigurationName)/musli.dll"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="../$(ConfigurationName)/$(ProjectName).exe" IntermediateDirectory="./Debug" Command="../$(ConfigurationName)/$(ProjectName).exe" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <General OutputFile="../$(ConfigurationName)/$(ProjectName).exe" IntermediateDirectory="./Debug" Command="../$(ConfigurationName)/$(ProjectName).exe" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="../$(ConfigurationName)" PauseExecWhenProcTerminates="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>

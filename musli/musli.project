@@ -12,12 +12,16 @@
     <File Name="StreamPacker.cpp"/>
     <File Name="Unpacker.cpp"/>
     <File Name="StreamUnpacker.cpp"/>
+    <File Name="MemoryPacker.cpp"/>
+    <File Name="MemoryUnpacker.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="Packer.h"/>
     <File Name="Unpacker.h"/>
     <File Name="StreamPacker.h"/>
     <File Name="StreamUnpacker.h"/>
+    <File Name="MemoryPacker.h"/>
+    <File Name="MemoryUnpacker.h"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <Settings Type="Dynamic Library">

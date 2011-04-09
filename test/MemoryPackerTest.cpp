@@ -1,36 +1,20 @@
 // musli - simple serialisation library
 // Copyright (c) 2011 Sean Farrell
 
-#include "StreamPacker.h"
-#include "StreamUnpacker.h"
+#include "MemoryPacker.h"
+#include "MemoryUnpacker.h"
 
-#include <sstream>
+#include <vector>
 #include <string>
 #include <UnitTest++/UnitTest++.h>
 
-SUITE(StreamPackerTest)
+SUITE(MemoryPackerTest)
 {
-//------------------------------------------------------------------------------    
-    TEST(pack_int)
-    {
-        std::stringstream stream;
-        musli::StreamPacker packer(stream);
-                
-        int orig = -13;
-        packer << orig;
-        
-        musli::StreamUnpacker unpacker(stream);
-        int copy = 0;
-        unpacker >> copy;
-        
-        CHECK_EQUAL(orig, copy);
-    }
-
 //------------------------------------------------------------------------------
-    TEST(pack_pod)
+    TEST(pack_simple_types)
     {
-        std::stringstream stream;
-        musli::StreamPacker packer(stream);
+        std::vector<char> buffer;
+        musli::MemoryPacker packer(buffer);        
         
         bool bool_orig = true;
         char char_orig = 11;
@@ -45,6 +29,7 @@ SUITE(StreamPackerTest)
         unsigned long ullong_orig = 20;
         float float_orig = 2.1;
         double double_orig = 2.2;
+        std::string string_orig = "Make mine a Murphy's!";
         
         packer << bool_orig;
         packer << char_orig;
@@ -59,9 +44,9 @@ SUITE(StreamPackerTest)
         packer << ullong_orig;
         packer << float_orig;
         packer << double_orig;
+        packer << string_orig;
         
-        musli::StreamUnpacker unpacker(stream);
-        
+        musli::MemoryUnpacker unpacker(buffer);        
         bool bool_copy = false;
         char char_copy = 0;
         unsigned char uchar_copy = 0;        
@@ -75,6 +60,7 @@ SUITE(StreamPackerTest)
         unsigned long ullong_copy = 0;
         float float_copy = 0.0;
         double double_copy = 0.0;
+        std::string string_copy;
         
         unpacker >> bool_copy;
         unpacker >> char_copy;
@@ -89,6 +75,7 @@ SUITE(StreamPackerTest)
         unpacker >> ullong_copy;
         unpacker >> float_copy;
         unpacker >> double_copy;     
+        unpacker >> string_copy;     
         
         CHECK_EQUAL(bool_orig, bool_copy);
         CHECK_EQUAL(char_orig, char_copy);
@@ -103,21 +90,5 @@ SUITE(StreamPackerTest)
         CHECK_EQUAL(ullong_orig, ullong_copy);
         CHECK_EQUAL(float_orig, float_copy);
         CHECK_EQUAL(double_orig, double_copy);
-    }
-
-//------------------------------------------------------------------------------
-    TEST(pack_string)
-    {
-        std::stringstream stream;
-        musli::StreamPacker packer(stream);        
-        
-        std::string orig = "Make mine a Murphy's!";
-        packer << orig;
-        
-        musli::StreamUnpacker unpacker(stream);
-        std::string copy;
-        unpacker >> copy;
-        
-        CHECK_EQUAL(orig, copy);
     }
 }
