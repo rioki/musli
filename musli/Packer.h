@@ -15,45 +15,42 @@ namespace musli
         
         ~Packer();
         
-        virtual void pack(bool value) = 0;
+        Packer& operator << (bool value);
         
-        virtual void pack(char value) = 0;
+        Packer& operator << (char value);
         
-        virtual void pack(unsigned char value) = 0;
+        Packer& operator << (unsigned char value);
         
-        virtual void pack(short value) = 0;
+        Packer& operator << (short value);
         
-        virtual void pack(unsigned short value) = 0;
+        Packer& operator << (unsigned short value);
         
-        virtual void pack(int value) = 0;
-                
-        virtual void pack(unsigned int value) = 0;
+        Packer& operator << (int value);
         
-        virtual void pack(long value) = 0;
+        Packer& operator << (unsigned int  value);
         
-        virtual void pack(unsigned long value) = 0;
+        Packer& operator << (long value);
         
-        virtual void pack(long long value) = 0;
+        Packer& operator << (unsigned long value);
         
-        virtual void pack(unsigned long long value) = 0;
+        Packer& operator << (long long value);
         
-        virtual void pack(float value) = 0;
+        Packer& operator << (unsigned long long value);
         
-        virtual void pack(double value) = 0;
+        Packer& operator << (float value);
         
-        virtual void pack(const std::string& value) = 0;
+        Packer& operator << (double value);
         
+        Packer& operator << (const std::string& value);
+    
+    protected:
+        
+        virtual void write(const char* data, unsigned int size) = 0;
+    
     private:
         Packer(const Packer&);
         const Packer& operator = (const Packer&);
-    };
-
-    template <typename Type>
-    Packer& operator << (Packer& packer, Type value)
-    {
-        packer.pack(value);
-        return packer;
-    }    
+    };  
 }
 
 #endif

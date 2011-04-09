@@ -15,45 +15,42 @@ namespace musli
         
         ~Unpacker();
         
-        virtual void unpack(bool& value) = 0;
+        Unpacker& operator >> (bool& value);
         
-        virtual void unpack(char& value) = 0;
+        Unpacker& operator >> (char& value);
         
-        virtual void unpack(unsigned char& value) = 0;
+        Unpacker& operator >> (unsigned char& value);
         
-        virtual void unpack(short& value) = 0;
+        Unpacker& operator >> (short& value);
         
-        virtual void unpack(unsigned short& value) = 0;
+        Unpacker& operator >> (unsigned short& value);
         
-        virtual void unpack(int& value) = 0;
-                
-        virtual void unpack(unsigned int& value) = 0;
+        Unpacker& operator >> (int& value);
         
-        virtual void unpack(long& value) = 0;
+        Unpacker& operator >> (unsigned int& value);
         
-        virtual void unpack(unsigned long& value) = 0;
+        Unpacker& operator >> (long& value);
         
-        virtual void unpack(long long& value) = 0;
+        Unpacker& operator >> (unsigned long& value);
         
-        virtual void unpack(unsigned long long& value) = 0;
+        Unpacker& operator >> (long long& value);
         
-        virtual void unpack(float& value) = 0;
+        Unpacker& operator >> (unsigned long long& value);
         
-        virtual void unpack(double& value) = 0;
+        Unpacker& operator >> (float& value);
         
-        virtual void unpack(std::string& value) = 0;
+        Unpacker& operator >> (double& value);
         
+        Unpacker& operator >> (std::string& value);
+        
+    protected: 
+        
+        virtual void read(char* data, unsigned int size) = 0;
+
     private:
         Unpacker(const Unpacker&);
         const Unpacker& operator = (const Unpacker&);
     };
-    
-    template <typename Type>
-    Unpacker& operator >> (Unpacker& unpacker, Type& value)
-    {
-        unpacker.unpack(value);
-        return unpacker;
-    } 
 }
 
 #endif
