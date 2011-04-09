@@ -12,6 +12,7 @@
     <File Name="StreamPackerTest.cpp"/>
     <File Name="MemoryPackerTest.cpp"/>
     <File Name="StdContainersTest.cpp"/>
+    <File Name="SimpleObjectTest.cpp"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="musli"/>
