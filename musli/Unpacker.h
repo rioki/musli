@@ -76,6 +76,7 @@ namespace musli
     Unpacker& operator >> (Unpacker& unpacker, std::pair<Type1, Type2>& value)
     {
         unpacker >> value.first >> value.second;
+        return unpacker;
     }
     
     template <typename Type>
@@ -85,6 +86,7 @@ namespace musli
         unpacker >> size;
         values.resize(size);
         std::for_each(values.begin(), values.end(), unpack_single(unpacker));
+        return unpacker;
     }
     
     template <typename Type>
@@ -94,6 +96,7 @@ namespace musli
         unpacker >> size;
         values.resize(size);
         std::for_each(values.begin(), values.end(), unpack_single(unpacker));
+        return unpacker;
     }
     
     template <typename Type>
@@ -103,6 +106,7 @@ namespace musli
         unpacker >> size;
         values.resize(size);
         std::for_each(values.begin(), values.end(), unpack_single(unpacker));
+        return unpacker;
     }
     
     template <typename Type>
@@ -118,6 +122,7 @@ namespace musli
             unpacker >> value;
             values.insert(value);
         }
+        return unpacker;
     }
     
     template <typename KeyType, typename ValueType>
@@ -133,6 +138,7 @@ namespace musli
             unpacker >> value;
             values.insert(value);
         }
+        return unpacker;
     }
 }
 

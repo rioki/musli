@@ -76,6 +76,7 @@ namespace musli
     Packer& operator << (Packer& packer, const std::pair<Type1, Type2>& value)
     {
         packer << value.first << value.second;
+        return packer;
     }
     
     template <typename Type>
@@ -84,6 +85,7 @@ namespace musli
         unsigned int size = values.size();
         packer << size;
         std::for_each(values.begin(), values.end(), pack_single(packer));
+        return packer;
     }
     
     template <typename Type>
@@ -91,7 +93,8 @@ namespace musli
     {
         unsigned int size = values.size();
         packer << size;
-        std::for_each(values.begin(), values.end(), pack_single(packer));        
+        std::for_each(values.begin(), values.end(), pack_single(packer));  
+        return packer;
     }
     
     template <typename Type>
@@ -99,7 +102,8 @@ namespace musli
     {
         unsigned int size = values.size();
         packer << size;
-        std::for_each(values.begin(), values.end(), pack_single(packer));        
+        std::for_each(values.begin(), values.end(), pack_single(packer)); 
+        return packer;
     }
     
     template <typename Type>
@@ -107,7 +111,8 @@ namespace musli
     {
         unsigned int size = values.size();
         packer << size;
-        std::for_each(values.begin(), values.end(), pack_single(packer));        
+        std::for_each(values.begin(), values.end(), pack_single(packer));
+        return packer;
     }
     
     template <typename KeyType, typename ValueType>
@@ -115,7 +120,8 @@ namespace musli
     {
         unsigned int size = values.size();
         packer << size;
-        std::for_each(values.begin(), values.end(), pack_single(packer));        
+        std::for_each(values.begin(), values.end(), pack_single(packer));
+        return packer;
     }
 }
 
