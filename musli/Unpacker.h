@@ -9,6 +9,8 @@
 #include <vector>
 #include <list>
 #include <deque>
+#include <set>
+#include <map>
 
 namespace musli
 {
@@ -70,6 +72,12 @@ namespace musli
         }
     };
     
+    template <typename Type1, typename Type2>
+    Unpacker& operator >> (Unpacker& unpacker, std::pair<Type1, Type2>& value)
+    {
+        unpacker >> value.first >> value.second;
+    }
+    
     template <typename Type>
     Unpacker& operator >> (Unpacker& unpacker, std::vector<Type>& values)
     {
@@ -95,6 +103,36 @@ namespace musli
         unpacker >> size;
         values.resize(size);
         std::for_each(values.begin(), values.end(), unpack_single(unpacker));
+    }
+    
+    template <typename Type>
+    Unpacker& operator >> (Unpacker& unpacker, std::set<Type>& values)
+    {
+        unsigned int size;
+        unpacker >> size;
+        
+        values.clear();
+        for (unsigned int i = 0; i < size; i++)
+        {
+            Type value;
+            unpacker >> value;
+            values.insert(value);
+        }
+    }
+    
+    template <typename KeyType, typename ValueType>
+    Unpacker& operator >> (Unpacker& unpacker, std::map<KeyType, ValueType>& values)
+    {
+        unsigned int size;
+        unpacker >> size;
+        
+        values.clear();
+        for (unsigned int i = 0; i < size; i++)
+        {
+            std::pair<KeyType, ValueType> value;
+            unpacker >> value;
+            values.insert(value);
+        }
     }
 }
 
