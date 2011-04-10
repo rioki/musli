@@ -11,6 +11,9 @@
 #include <deque>
 #include <set>
 #include <map>
+#include <typeinfo>
+
+#include "Factory.h"
 
 namespace musli
 {
@@ -48,12 +51,37 @@ namespace musli
         Packer& operator << (double value);
         
         Packer& operator << (const std::string& value);
+        
+        // WARNING: Cyclic pointers only work for pointers to heap objects!
+        template <typename Type>
+        Packer& operator << (Type* value)
+        {
+            std::map<void*, unsigned int>::iterator iter;
+            iter = pointer_map.find(value);
+            if (iter != pointer_map.end())
+            {
+                *this << iter->second;
+            }
+            else
+            {
+                unsigned int id = last_pointer_id;                
+                unsigned int type_id = factory.get_type_id(typeid(*value));
+                pointer_map[value] = id;
+                last_pointer_id++;
+                *this << id << type_id << *value;
+            }
+            return *this;
+        }
     
     protected:
         
         virtual void write(const char* data, unsigned int size) = 0;
     
     private:
+        Factory& factory;
+        std::map<void*, unsigned int> pointer_map;
+        unsigned int last_pointer_id;
+    
         Packer(const Packer&);
         const Packer& operator = (const Packer&);
     };
@@ -122,14 +150,7 @@ namespace musli
         packer << size;
         std::for_each(values.begin(), values.end(), pack_single(packer));
         return packer;
-    }
-    
-    template <typename Type>
-    Packer& operator << (Packer& packer, Type* value)
-    {
-        packer << *value;
-        return packer;
-    }
+    }    
 }
 
 #endif

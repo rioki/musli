@@ -11,6 +11,9 @@
 #include <deque>
 #include <set>
 #include <map>
+#include <stdexcept>
+
+#include "Factory.h"
 
 namespace musli
 {
@@ -49,11 +52,49 @@ namespace musli
         
         Unpacker& operator >> (std::string& value);
         
+        template <typename Type>
+        Unpacker& operator >> (Type*& value)
+        {
+            unsigned int id = 0;
+            *this >> id;
+            if (id < pointer_map.size())
+            {
+                value = static_cast<Type*>(pointer_map[id]);
+            }
+            else
+            {
+                unsigned int type_id = 0;
+                *this >> type_id;
+                
+                if (type_id == 0)
+                {
+                    value = new Type;                
+                }
+                else
+                {
+                    value = reinterpret_cast<Type*>(factory.create(type_id));
+                }
+                
+                if (id != pointer_map.size())
+                {
+                    throw std::logic_error("Invalid pointer id.");
+                }
+                
+                pointer_map.push_back(value);
+                
+                *this >> *value;
+            }
+            return *this;
+        }
+        
     protected: 
         
         virtual void read(char* data, unsigned int size) = 0;
 
     private:
+        Factory& factory;
+        std::vector<void*> pointer_map;
+    
         Unpacker(const Unpacker&);
         const Unpacker& operator = (const Unpacker&);
     };
@@ -138,14 +179,6 @@ namespace musli
             unpacker >> value;
             values.insert(value);
         }
-        return unpacker;
-    }
-    
-    template <typename Type>
-    Unpacker& operator >> (Unpacker& unpacker, Type*& value)
-    {
-        value = new Type;
-        unpacker >> *value;
         return unpacker;
     }
 }

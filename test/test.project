@@ -13,6 +13,8 @@
     <File Name="MemoryPackerTest.cpp"/>
     <File Name="StdContainersTest.cpp"/>
     <File Name="SimpleObjectTest.cpp"/>
+    <File Name="CyclicReferencesTest.cpp"/>
+    <File Name="PolymorphicObjects.cpp"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="musli"/>
