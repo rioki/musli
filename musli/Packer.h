@@ -123,6 +123,13 @@ namespace musli
         std::for_each(values.begin(), values.end(), pack_single(packer));
         return packer;
     }
+    
+    template <typename Type>
+    Packer& operator << (Packer& packer, Type* value)
+    {
+        packer << *value;
+        return packer;
+    }
 }
 
 #endif

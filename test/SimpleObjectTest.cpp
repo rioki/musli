@@ -52,8 +52,31 @@ SUITE(SimpleObjectTest)
         
         MyObject copy;
         musli::MemoryUnpacker unpacker(buffer);
-        unpacker >> orig;
+        unpacker >> copy;
         
         CHECK(orig == copy);
+    }
+
+//------------------------------------------------------------------------------
+    TEST(pack_pinter_to_object)
+    {
+        MyObject* orig = new MyObject;
+        orig->value1 = "Hello";
+        orig->value2 = 1337;
+        orig->value3 = true;
+        
+        std::vector<char> buffer;
+        musli::MemoryPacker packer(buffer); 
+        packer << orig;
+        
+        MyObject* copy;
+        musli::MemoryUnpacker unpacker(buffer);
+        unpacker >> copy;
+        
+        CHECK(orig != copy);
+        CHECK(*orig == *copy);
+        
+        delete orig;
+        delete copy;
     }
 }

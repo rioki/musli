@@ -111,6 +111,7 @@ namespace musli
         {
             write(&value[0], size * sizeof(char));
         }
+        return *this;
     }
 }
 

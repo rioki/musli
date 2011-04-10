@@ -140,6 +140,14 @@ namespace musli
         }
         return unpacker;
     }
+    
+    template <typename Type>
+    Unpacker& operator >> (Unpacker& unpacker, Type*& value)
+    {
+        value = new Type;
+        unpacker >> *value;
+        return unpacker;
+    }
 }
 
 #endif

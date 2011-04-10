@@ -116,6 +116,7 @@ namespace musli
         {
             value = std::string();
         }
+        return *this;
     }
 }
 
