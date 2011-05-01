@@ -35,6 +35,24 @@ SUITE(StreamPackerTest)
     }
     
 //------------------------------------------------------------------------------    
+    TEST(pack_empty_vector)
+    {
+        std::vector<unsigned int> orig;
+        std::generate(orig.begin(), orig.end(), std::rand);
+        
+        std::stringstream stream;
+        musli::StreamPacker packer(stream);
+                
+        packer << orig;
+        
+        musli::StreamUnpacker unpacker(stream);
+        std::vector<unsigned int> copy;
+        unpacker >> copy;
+        
+        CHECK(orig == copy);
+    }
+    
+//------------------------------------------------------------------------------    
     TEST(pack_list)
     {
         std::list<unsigned int> orig(25);
