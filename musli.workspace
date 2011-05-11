@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CodeLite_Workspace Name="musli" Database="./musli.tags">
   <Project Name="musli" Path="musli/musli.project" Active="No"/>
-  <Project Name="test" Path="test/test.project" Active="Yes"/>
+  <Project Name="musli_test" Path="musli_test/test.project" Active="Yes"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Project Name="musli" ConfigName="Debug"/>
