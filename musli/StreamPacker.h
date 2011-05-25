@@ -10,11 +10,22 @@
 
 namespace musli
 {
+    /**
+     * Implementation of a Packer that packs to std::ostream.
+     **/
     class StreamPacker : public Packer
     {
     public:
+        /**
+         * Constructor
+         *
+         * @param stream the stream to pack to
+         **/
         StreamPacker(std::ostream& stream);
         
+        /**
+         * Destructor
+         **/
         ~StreamPacker();
     
     protected:

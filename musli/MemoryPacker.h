@@ -10,11 +10,22 @@
 
 namespace musli
 {
+    /**
+     * Implementation of a Packer that packs to memory.
+     **/
     class MemoryPacker : public Packer
     {
     public:
+        /**
+         * Constructor
+         *
+         * @param buffer the buffer to pack to
+         **/
         MemoryPacker(std::vector<char>& buffer);
         
+        /**
+         * Destructor
+         **/
         ~MemoryPacker();
     
     protected:

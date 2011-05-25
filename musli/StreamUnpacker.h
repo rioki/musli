@@ -10,11 +10,22 @@
 
 namespace musli
 {
+    /**
+     * Implementation of a Unpacker that unpacks to std::istream.
+     **/
     class StreamUnpacker : public Unpacker
     {
     public:
+        /**
+         * Constrcutor
+         *
+         * @param stream the stream to unpack from
+         **/
         StreamUnpacker(std::istream& stream);
         
+        /**
+         * Destructor
+         **/
         ~StreamUnpacker();
         
     protected:

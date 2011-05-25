@@ -10,11 +10,22 @@
 
 namespace musli
 {
+    /**
+     * Implementation of a Unpacker that unpacks from memory.
+     **/
     class MemoryUnpacker : public Unpacker
     {
     public:
+        /**
+         * Constructor
+         *
+         * @param buffer the buffer to unpack from.
+         **/
         MemoryUnpacker(std::vector<char>& buffer);
         
+        /**
+         * Destructor
+         **/
         ~MemoryUnpacker();
         
     protected:

@@ -10,6 +10,14 @@ namespace musli
 {
     class BaseFactorlet;
     
+    /**
+     * Type Factory
+     *
+     * The factory is used to create polymorphic pointer types. The types are 
+     * registered through the use of a factorlet.
+     *
+     * @see Factorlet 
+     **/
     class Factory
     {
     public:
