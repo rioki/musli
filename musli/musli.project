@@ -27,7 +27,6 @@
     <File Name="Factorlet.h"/>
     <File Name="Factory.h"/>
   </VirtualDirectory>
-  <Dependencies Name="Debug"/>
   <Settings Type="Dynamic Library">
     <GlobalSettings>
       <Compiler Options="" C_Options="">
@@ -99,4 +98,6 @@
       </AdditionalRules>
     </Configuration>
   </Settings>
+  <Dependencies Name="Debug"/>
+  <Dependencies Name="Release"/>
 </CodeLite_Project>

@@ -9,7 +9,7 @@
 namespace musli
 {
 //------------------------------------------------------------------------------
-    MemoryUnpacker::MemoryUnpacker(std::vector<char>& b)
+    MemoryUnpacker::MemoryUnpacker(const std::vector<char>& b)
     : buffer(b) 
     {
         read_pos = buffer.begin();
@@ -21,8 +21,8 @@ namespace musli
 //------------------------------------------------------------------------------
     void MemoryUnpacker::read(char* data, unsigned int size)
     {
-        std::vector<char>::iterator start = read_pos;
-        std::vector<char>::iterator end = read_pos + size;
+        std::vector<char>::const_iterator start = read_pos;
+        std::vector<char>::const_iterator end = read_pos + size;
         std::copy(start, end, data);
         read_pos = end;
     }

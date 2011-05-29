@@ -21,7 +21,7 @@ namespace musli
          *
          * @param buffer the buffer to unpack from.
          **/
-        MemoryUnpacker(std::vector<char>& buffer);
+        MemoryUnpacker(const std::vector<char>& buffer);
         
         /**
          * Destructor
@@ -33,9 +33,9 @@ namespace musli
         virtual void read(char* data, unsigned int size);
         
     private:
-        std::vector<char>& buffer;
+        const std::vector<char>& buffer;
         
-        std::vector<char>::iterator read_pos;
+        std::vector<char>::const_iterator read_pos;
     };
 }
 
