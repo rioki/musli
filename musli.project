@@ -8,25 +8,27 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
-    <File Name="Packer.cpp"/>
-    <File Name="StreamPacker.cpp"/>
-    <File Name="Unpacker.cpp"/>
-    <File Name="StreamUnpacker.cpp"/>
-    <File Name="MemoryPacker.cpp"/>
-    <File Name="MemoryUnpacker.cpp"/>
-    <File Name="Factory.cpp"/>
-    <File Name="Factorlet.cpp"/>
+    <File Name="src/Packer.cpp"/>
+    <File Name="src/StreamPacker.cpp"/>
+    <File Name="src/Unpacker.cpp"/>
+    <File Name="src/StreamUnpacker.cpp"/>
+    <File Name="src/MemoryPacker.cpp"/>
+    <File Name="src/MemoryUnpacker.cpp"/>
+    <File Name="src/Factory.cpp"/>
+    <File Name="src/Factorlet.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
-    <File Name="Packer.h"/>
-    <File Name="Unpacker.h"/>
-    <File Name="StreamPacker.h"/>
-    <File Name="StreamUnpacker.h"/>
-    <File Name="MemoryPacker.h"/>
-    <File Name="MemoryUnpacker.h"/>
-    <File Name="Factorlet.h"/>
-    <File Name="Factory.h"/>
+    <File Name="include/musli/Packer.h"/>
+    <File Name="include/musli/Unpacker.h"/>
+    <File Name="include/musli/StreamPacker.h"/>
+    <File Name="include/musli/StreamUnpacker.h"/>
+    <File Name="include/musli/MemoryPacker.h"/>
+    <File Name="include/musli/MemoryUnpacker.h"/>
+    <File Name="include/musli/Factorlet.h"/>
+    <File Name="include/musli/Factory.h"/>
   </VirtualDirectory>
+  <Dependencies Name="Release"/>
+  <Dependencies Name="Debug"/>
   <Settings Type="Dynamic Library">
     <GlobalSettings>
       <Compiler Options="" C_Options="">
@@ -39,13 +41,13 @@
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" C_Options="-g" Required="yes" PreCompiledHeader="">
-        <IncludePath Value="."/>
+        <IncludePath Value="include/musli"/>
       </Compiler>
       <Linker Options="" Required="yes">
         <Library Value="user32"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="../$(ConfigurationName)/$(ProjectName).dll" IntermediateDirectory="./Debug" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="no"/>
+      <General OutputFile="$(ConfigurationName)/$(ProjectName).dll" IntermediateDirectory="./Debug" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="no"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
@@ -70,11 +72,11 @@
     </Configuration>
     <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="" C_Options="" Required="yes" PreCompiledHeader="">
-        <IncludePath Value="."/>
+        <IncludePath Value="include/musli"/>
       </Compiler>
       <Linker Options="-O2" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="../$(ConfigurationName)/$(ProjectName).dll" IntermediateDirectory="./Release" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <General OutputFile="$(ConfigurationName)/$(ProjectName).dll" IntermediateDirectory="./Release" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
@@ -98,6 +100,4 @@
       </AdditionalRules>
     </Configuration>
   </Settings>
-  <Dependencies Name="Debug"/>
-  <Dependencies Name="Release"/>
 </CodeLite_Project>

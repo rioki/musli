@@ -8,18 +8,18 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
-    <File Name="main.cpp"/>
-    <File Name="StreamPackerTest.cpp"/>
-    <File Name="MemoryPackerTest.cpp"/>
-    <File Name="StdContainersTest.cpp"/>
-    <File Name="SimpleObjectTest.cpp"/>
-    <File Name="CyclicReferencesTest.cpp"/>
-    <File Name="PolymorphicObjects.cpp"/>
+    <File Name="test/main.cpp"/>
+    <File Name="test/StreamPackerTest.cpp"/>
+    <File Name="test/MemoryPackerTest.cpp"/>
+    <File Name="test/StdContainersTest.cpp"/>
+    <File Name="test/SimpleObjectTest.cpp"/>
+    <File Name="test/CyclicReferencesTest.cpp"/>
+    <File Name="test/PolymorphicObjects.cpp"/>
   </VirtualDirectory>
-  <Dependencies Name="Debug">
+  <Dependencies Name="Release">
     <Project Name="musli"/>
   </Dependencies>
-  <Dependencies Name="Release">
+  <Dependencies Name="Debug">
     <Project Name="musli"/>
   </Dependencies>
   <Settings Type="Executable">
@@ -34,17 +34,17 @@
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" C_Options="-g" Required="yes" PreCompiledHeader="">
-        <IncludePath Value="."/>
-        <IncludePath Value="../musli"/>
+        <IncludePath Value="include/musli"/>
         <IncludePath Value="$(UNIT_TEST_DIR)/include"/>
       </Compiler>
       <Linker Options="" Required="yes">
         <LibraryPath Value="$(UNIT_TEST_DIR)/lib"/>
-        <Library Value="libUnitTest++.a"/>
-        <Library Value="../$(ConfigurationName)/musli.dll"/>
+        <LibraryPath Value="$(ConfigurationName)"/>
+        <Library Value="libUnitTest++"/>
+        <Library Value="musli"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="../$(ConfigurationName)/$(ProjectName).exe" IntermediateDirectory="./Debug" Command="../$(ConfigurationName)/$(ProjectName).exe" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="../$(ConfigurationName)" PauseExecWhenProcTerminates="yes"/>
+      <General OutputFile="$(ConfigurationName)/$(ProjectName).exe" IntermediateDirectory="./Debug" Command="$(ConfigurationName)/$(ProjectName).exe" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="" PauseExecWhenProcTerminates="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
@@ -71,17 +71,17 @@
     </Configuration>
     <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="" C_Options="" Required="yes" PreCompiledHeader="">
-        <IncludePath Value="."/>
-        <IncludePath Value="../musli"/>
+        <IncludePath Value="include/musli"/>
         <IncludePath Value="$(UNIT_TEST_DIR)/include"/>
       </Compiler>
       <Linker Options="-O2" Required="yes">
         <LibraryPath Value="$(UNIT_TEST_DIR)/lib"/>
-        <Library Value="libUnitTest++.a"/>
-        <Library Value="../$(ConfigurationName)/musli.dll"/>
+        <LibraryPath Value="$(ConfigurationName)"/>
+        <Library Value="libUnitTest++"/>
+        <Library Value="musli"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="../$(ConfigurationName)/$(ProjectName).exe" IntermediateDirectory="./Release" Command="../$(ConfigurationName)/$(ProjectName).exe" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <General OutputFile="$(ConfigurationName)/$(ProjectName).exe" IntermediateDirectory="./Release" Command="$(ConfigurationName)/$(ProjectName).exe" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="" PauseExecWhenProcTerminates="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
