@@ -19,9 +19,6 @@
   <Dependencies Name="Release">
     <Project Name="musli"/>
   </Dependencies>
-  <Dependencies Name="Debug">
-    <Project Name="musli"/>
-  </Dependencies>
   <Settings Type="Executable">
     <GlobalSettings>
       <Compiler Options="" C_Options="">
@@ -107,4 +104,7 @@
       </AdditionalRules>
     </Configuration>
   </Settings>
+  <Dependencies Name="Debug">
+    <Project Name="musli"/>
+  </Dependencies>
 </CodeLite_Project>
