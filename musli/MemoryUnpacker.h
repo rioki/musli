@@ -30,23 +30,14 @@
 
 namespace musli
 {
-    /**
-     * Implementation of a Unpacker that unpacks from memory.
-     **/
+    //! Implementation of a Unpacker that unpacks from memory.
     class MUSLI_EXPORT MemoryUnpacker : public Unpacker
     {
     public:
-        /**
-         * Constructor
-         *
-         * @param buffer the buffer to unpack from.
-         **/
+        //! Constructor
+        //!
+        //! @param buffer the buffer to unpack from.
         MemoryUnpacker(const std::vector<char>& buffer);
-
-        /**
-         * Destructor
-         **/
-        ~MemoryUnpacker();
 
     protected:
 

@@ -27,8 +27,6 @@ namespace musli
     Unpacker::Unpacker()
     : factory(Factory::get_instance()){}
 
-    Unpacker::~Unpacker() {}
-
     Unpacker& Unpacker::operator >> (bool& value)
     {
         read(reinterpret_cast<char*>(&value), sizeof(bool));

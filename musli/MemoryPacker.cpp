@@ -30,8 +30,6 @@ namespace musli
     MemoryPacker::MemoryPacker(std::vector<char>& b)
     : buffer(b) {}
 
-    MemoryPacker::~MemoryPacker() {}
-
     void MemoryPacker::write(const char* data, unsigned int size)
     {
         std::copy(data, data + size, std::back_inserter(buffer));

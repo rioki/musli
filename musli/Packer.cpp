@@ -26,8 +26,6 @@ namespace musli
     Packer::Packer()
     : factory(Factory::get_instance()), last_pointer_id(0) {}
 
-    Packer::~Packer() {}
-
     Packer& Packer::operator << (bool value)
     {
         write(reinterpret_cast<const char*>(&value), sizeof(bool));

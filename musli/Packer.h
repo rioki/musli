@@ -37,104 +37,43 @@
 
 namespace musli
 {
-    /**
-     * Packer
-     *
-     * The packer is the core object for serialisation. It contains the
-     * underlying algorithm for encoding data.
-     *
-     * The usage and interface is very similar to std::ostream. You can
-     * either pack simple types or write << operators that pack your complex
-     * types.
-     **/
+    //! Packer
+    //!
+    //! The packer is the core object for serialisation. It contains the
+    //! underlying algorithm for encoding data.
+    //!
+    //! The usage and interface is very similar to std::ostream. You can
+    //! either pack simple types or write << operators that pack your complex
+    //! types.
     class MUSLI_EXPORT Packer
     {
     public:
-        /**
-         * Constructor
-         **/
+        //! Constructor
         Packer();
 
-        /**
-         * Destructor
-         **/
-        ~Packer();
-
-        /**
-         * Pack a bool.
-         **/
+        //! Pack a value
+        //!
+        //! @param value the value to pack
+        //! @{
         Packer& operator << (bool value);
-
-        /**
-         * Pack a char.
-         **/
         Packer& operator << (char value);
-
-        /**
-         * Pack an unsigned char.
-         **/
         Packer& operator << (unsigned char value);
-
-        /**
-         * Pack a short.
-         **/
         Packer& operator << (short value);
-
-        /**
-         * Pack an unsigned short
-         **/
         Packer& operator << (unsigned short value);
-
-        /**
-         * Pack an int.
-         **/
         Packer& operator << (int value);
-
-        /**
-         * Pack an unsigned int.
-         **/
         Packer& operator << (unsigned int  value);
-
-        /**
-         * Pack a long.
-         **/
         Packer& operator << (long value);
-
-        /**
-         * Pack an unsigned long.
-         **/
         Packer& operator << (unsigned long value);
-
-        /**
-         * Pack a long long.
-         **/
         Packer& operator << (long long value);
-
-        /**
-         * Pack an unsigned long long.
-         **/
         Packer& operator << (unsigned long long value);
-
-        /**
-         * Pack a float.
-         **/
         Packer& operator << (float value);
-
-        /**
-         * Pack a double.
-         **/
         Packer& operator << (double value);
-
-        /**
-         * Pack a string.
-         **/
         Packer& operator << (const std::string& value);
+        //! @}
 
-        /**
-         * Pack a pointer.
-         *
-         * @warning Cyclic pointers only work for pointers to heap objects!
-         **/
+        //! Pack a pointer.
+        //!
+        //! @warning Cyclic pointers only work for pointers to heap objects!
         template <typename Type>
         Packer& operator << (Type* value)
         {
@@ -157,12 +96,10 @@ namespace musli
 
     protected:
 
-        /**
-         * Write to the "physical" medium.
-         *
-         * This method does the actual writing. Each packer needs only
-         * to implement this method.
-         **/
+        //! Write to the "physical" medium.
+        //!
+        //! This method does the actual writing. Each packer needs only
+        //! to implement this method.
         virtual void write(const char* data, unsigned int size) = 0;
 
     private:
@@ -170,13 +107,11 @@ namespace musli
         std::map<void*, unsigned int> pointer_map;
         unsigned int last_pointer_id;
 
-        Packer(const Packer&);
-        const Packer& operator = (const Packer&);
+        Packer(const Packer&) = delete;
+        const Packer& operator = (const Packer&) = delete;
     };
 
-    /**
-     * Functor used to pack single objects when packing STL containers.
-     **/
+    //! Functor used to pack single objects when packing STL containers.
     struct pack_single
     {
         Packer& packer;
@@ -191,9 +126,9 @@ namespace musli
         }
     };
 
-    /**
-     * Pack a std::pair.
-     **/
+    //! Pack STD containers and objects
+    //!
+    //! @{
     template <typename Type1, typename Type2>
     Packer& operator << (Packer& packer, const std::pair<Type1, Type2>& value)
     {
@@ -201,9 +136,6 @@ namespace musli
        return packer;
     }
 
-    /**
-     * Pack a std::vector
-     **/
     template <typename Type>
     Packer& operator << (Packer& packer, const std::vector<Type>& values)
     {
@@ -213,9 +145,6 @@ namespace musli
         return packer;
     }
 
-    /**
-     * Pack a std::list.
-     **/
     template <typename Type>
     Packer& operator << (Packer& packer, const std::list<Type>& values)
     {
@@ -225,9 +154,6 @@ namespace musli
         return packer;
     }
 
-    /**
-     * Pack a std::deque
-     **/
     template <typename Type>
     Packer& operator << (Packer& packer, const std::deque<Type>& values)
     {
@@ -237,9 +163,6 @@ namespace musli
         return packer;
     }
 
-    /**
-     * Pack a std::set
-     **/
     template <typename Type>
     Packer& operator << (Packer& packer, const std::set<Type>& values)
     {
@@ -249,9 +172,6 @@ namespace musli
         return packer;
     }
 
-    /**
-     * Pack a std::map
-     **/
     template <typename KeyType, typename ValueType>
     Packer& operator << (Packer& packer, const std::map<KeyType, ValueType>& values)
     {
@@ -260,6 +180,7 @@ namespace musli
         std::for_each(values.begin(), values.end(), pack_single(packer));
         return packer;
     }
+    //! @}
 }
 
 #endif

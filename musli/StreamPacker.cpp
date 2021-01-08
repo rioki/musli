@@ -28,8 +28,6 @@ namespace musli
     StreamPacker::StreamPacker(std::ostream& s)
     : stream(s) {}
 
-    StreamPacker::~StreamPacker() {}
-
     void StreamPacker::write(const char* data, unsigned int size)
     {
         stream.write(data, size);

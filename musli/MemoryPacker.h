@@ -30,26 +30,16 @@
 
 namespace musli
 {
-    /**
-     * Implementation of a Packer that packs to memory.
-     **/
+    //! Implementation of a Packer that packs to memory.
     class MUSLI_EXPORT MemoryPacker : public Packer
     {
     public:
-        /**
-         * Constructor
-         *
-         * @param buffer the buffer to pack to
-         **/
+        //! Constructor
+        //!
+        //! @param buffer the buffer to pack to
         MemoryPacker(std::vector<char>& buffer);
 
-        /**
-         * Destructor
-         **/
-        ~MemoryPacker();
-
     protected:
-
         virtual void write(const char* data, unsigned int size);
 
     private:

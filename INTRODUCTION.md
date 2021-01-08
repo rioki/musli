@@ -1,122 +1,172 @@
-# A Introduction to musli
+# Introduction
 
-
-musli is a serialisation library that aims to be simple to use. This document 
-shows you how simple it is to use.
+The musli library borrows heavily from the iostream library. As a result using 
+the musli library should be very simple to adapt for experienced C++ developers. 
 
 ## Basic Concepts
 
-The design of musli borrows basic concepts from the iostream library. But instead
-of a stream you have a packer and instead of streaming objects you pack objects.
-The most striking similarity with the iostream library is the use of the left 
-shift operator `<<` for packing and the right shift operator `>>` for unpacking. 
+Serialization in musli is done with the help of so called Packers. These packers 
+wrap a so called box; though boxes are not explicitly modeled. There are 
+currently two box types sported, memory (vector<char>) and iosteams. The 
+respective packers are SteamPacker and MemoryPacker. Each Packer has a 
+respective Unpacker, which is used for unserializing data.
 
-Currently there are two sets of packers. The StreamPacker / StreamUnpack and 
-the MemoryPacker / MemoryUnpacker. These pack and unpack respectively to a 
-iostream or memory (std::vector<char>). By using or extending the stream packer 
-you can basically pack to anywhere.
+## Simple Objects
 
-The term packing is used instead of serialisation because serialisation is a 
-general term that describes many scenarios, including iostreams. By removing the
-word specific predefined notions can be removed.
+Simple objects, such as POD type, string and containers of POD types can 
+easily serialized and unserialized. 
 
-## Packing Simple Data
+If you have to following values:
 
-Packing simple data is completely trivial:
+    unsigned int intvalue;
+    float floatvalue; 
+    std::vector<std::string> string_list;
 
-    std::vector<char> buffer;
-    musli::MemoryPacker packer(buffer);
+You can pack them with the following code:
     
-    int some_int = 1337;
-    float some_float = 13.37f;
-    std::string some_string = "Hello World!";
-    std::map<std::string, std::vector<unsinged int> > some_large_container =
-        create_some_large_container();
-    
-    packer << some_int << some_float << some_string << some_large_container;
-    
-Unpacking is as simple:
+    std::vector<char> buff;
+    musli::MemoryPacker packer(buff);
+    packer << intvalue << floatvalue << string_list;
 
-    int some_int;
-    float some_float;
-    std::string some_string;
-    std::map<std::string, std::vector<unsinged int> > some_large_container;
+The data is not contained within ``buff`` in a compact binary form. To unpack 
+the data you need to do the same thing in reverse:
 
-    musli::MemoryUnpacker unpacker(buffer);
-    unpacker >> some_int >> some_float >> some_string >> some_large_container;
+    std::vector<char> buff;
+    musli::MemoryUnpacker unpacker(buff);
+    unpacker >> intvalue >> floatvalue >> string_list;
 
-## Packing Your Objects
+## Adding Packing to Custom Objects
 
-If you noticed a similarity to the iostream library, now you will really see it.
+Adding packing to your objects or third party objects is really simple, you 
+just need to define the ``<<`` and ``>>`` operators:
 
-If you have a object say:
-
-    class MyObject
+    class MyClass
     {
     public:
-        void set_a(unsigned int value);
-        unsinged int get_a() const;
+        float get_value1() const;
         
-        void set_b(unsigned int value);
-        unsigned int get_b() const;
-    private:
-        unsinged int a;
-        unsigned int b;
+        void set_value1(float vlaue);
+        
+        float get_value2() const;
+        
+        void set_value2(float vlaue);
     };
-
-Adding packing is simple:
-
-    musli::Packer& operator << (musli::Packer& packer, const MyObject& object)
+    
+    musli::Packer& operator << (musli::Packer& packer, const MyClass& object)
     {
-        packer << object.get_a() << object.get_b();
+        packer << object.get_value1() << object.get_value2();
         return packer;
     }
     
-And unpacking:
-
-    musli::Unpacker& operator >> (musli::Unpacker& unpacker, MyObject& object)
+    musli::Unpacker& operator >> (musli::Unpacker& unpacker, MyClass& object)
     {
-        unsigned int a, b;
-        packer >> a >> b;
-        object.set_a(a);
-        object.set_b(b);
+        float value1, value2;
+        unpacker >> value1 >> value2;
+        
+        object.set_value1(value1);
+        object.set_value1(value2);
+        
+        return unpacker;
+    }
+
+The object of type MyClass can then easily be passed to a packer, like so:
+
+    MyClass object;    
+    packer << object;
+
+Obviously you can use all other common techniques, such as a friend function or 
+member method taking a packer.
+
+## Pointers
+
+One of the most powerful features of musli is that it can serialize and 
+desrialize pointers. No matter what complicated structure you have, it will 
+be reproduced. The only requirement here is that the memory is to the heap, 
+to the head of the allocated chunk and be only one element. 
+This captures about 95% of all pointer use. 
+
+So basically the following code works without any special attention:
+
+    MyObject* object = new MyObject;
+    packer << object;
+    
+    unpacker >> object;
+    
+Array are special, since there is no way how musli can know the size of the 
+array and in many cases even if it is an array. But there is a workaround,
+you just need to pass each object to musli separately.
+
+    unsigned int object_count = 5;
+    MyObject* objects = new MyObject[object_count];
+    
+    packer << object_count;
+    for (unsigned int i = 0; i < object_count; i++)
+    {
+        packer << objects[i];
+    }
+    
+Unpacking basically works symmetrically:
+
+    unsigned int object_count;
+    unpacker >> object_count;
+    
+    MyObject* objects = new MyObject[object_count];
+    for (unsigned int i = 0; i < object_count; i++)
+    {
+        unpacker >> objects[i];
+    }
+
+Non heap pointers are more difficult to handle, it depends on your scenario. 
+You can still serialize the object the pointer points to. But how to regenerate
+the pointer is up to you. Once you have the pointer you can deserialize the 
+object again.
+
+Polymorphic Objects
+-------------------
+
+As you can see most cases are relatively simple and require no special 
+interaction. It you have polymorphic objects, this becomes somewhat more
+difficult. There are few inherent issues with polymorphic objects, that
+make it rather difficult for musli to handle. As a result a few provisions
+need to be done. 
+
+The first issue is basically related to how you implement the ``<<`` and ``>>``
+operator. Like with iostreams, you need to implement the stream operators 
+differently when you want to steam the object while holding a reference to the
+base class.
+
+A simple solution is to implement a virtual function that does the actual packing
+and have the operators on the base class, like so:  
+
+    class Base
+    {
+    public:
+    
+        virtual void pack(musli::Packer& packer) const;
+        
+        virtual void unpack(musli::Unpacker& unpacker) const;
+    };
+    
+    musli::Packer& operator << (musli::Packer& packer, const Base& object)
+    {
+        object.pack(packer);   
         return packer;
     }
     
-Of course you can also use a friend declaration to access the private members,
-just like the iostream library.
+    musli::Unpacker& operator >> (musli::Unpacker& unpacker, Base& object)
+    {
+        object.unpack(unpacker);   
+        return unpacker;
+    }
 
-# Packing Pointers
+Each derived class not only needs to implement the pack and unpack methods.
 
-Packing pointers to non polymorphic objects is as simple. You can have almost 
-any object layout. This includes directed graphs, acyclic graphs and cyclic 
-graphs. The only limitation there is, is that the pointer has to point into heap 
-memory and point to the head of an object. (These restrictions might be removed
-in the future.)
+The second issue are pointers to polymorphic objects. Here musli must know what
+type it needs to create. This is done by defining a factorlet for each derived
+type in your cpp file. (Each type you can allocate with new.)
 
-# Packing Polymorphic Objects
+    musli::Factorlet<DerivedTypeA> derived_type_a_factorlet; 
+    musli::Factorlet<DerivedTypeB> derived_type_b_factorlet;
 
-The only extra work you have to do is when you have polymorphic objects. That is
-objects that contain virtual methods and may be handled by the base class. In 
-these cases you need to expose your class the library by defining a factorlet.
-
-Factorlets are small factory objects, that register themselves to the main musli
-factory. This is done automatically, so you only have to define it somewhere in 
-your code, like so:
-
-    musli::Factorlet<MyType> my_type_factorlet;
-
-## Caveats
-
-There are a few minor caveats you need to consider. 
-
-First and foremost, I must repeat the limitation to pointers. You must ensure that
-that all pointers reference into the heap and to the head of an object. 
-
-Second, you can't unpack constant objects, that is references and constant 
-pointers. This limitation is inherent in the C++ language.
-
-Third, there is a minor deficiency in MemoryPacker. As a result you can't create
-the packer and unpacker at the same time for the same buffer. This was resolved
-because this is not a real use case. See MemoryPackerTest.cpp for a workaround.
-
+**Note:** On windows you need to build musli as a DLL or else the registration
+process does not work.

@@ -37,107 +37,46 @@
 
 namespace musli
 {
-    /**
-     * Unpacker
-     *
-     * The unpacker is the core object for deserialisation. It contains the
-     * underlying algorithm for decoding data.
-     *
-     * The usage and interface is very similar to std::istream. You can
-     * either unpack simple types or write >> operators that unpack your complex
-     * types.
-     **/
+    //! Unpacker
+    //!
+    //! The unpacker is the core object for deserialisation. It contains the
+    //! underlying algorithm for decoding data.
+    //!
+    //! The usage and interface is very similar to std::istream. You can
+    //! either unpack simple types or write >> operators that unpack your complex
+    //! types.
     class MUSLI_EXPORT Unpacker
     {
     public:
-        /**
-         * Constructor
-         **/
+        //! Constructor
         Unpacker();
 
-        /**
-         * Destructor
-         **/
-        ~Unpacker();
-
-        /**
-         * Unpack a bool.
-         **/
+        //! Unpack a simple value
+        //!
+        //! @param value
+        //! @{
         Unpacker& operator >> (bool& value);
-
-        /**
-         * Unpack a char.
-         **/
         Unpacker& operator >> (char& value);
-
-        /**
-         * Unpack an unsinged char.
-         **/
         Unpacker& operator >> (unsigned char& value);
-
-        /**
-         * Unpack a short.
-         **/
         Unpacker& operator >> (short& value);
-
-        /**
-         * Unpack an unsigned short.
-         **/
         Unpacker& operator >> (unsigned short& value);
-
-        /**
-         * Unpack a int.
-         **/
         Unpacker& operator >> (int& value);
-
-        /**
-         * Unpack an unsigned int.
-         **/
         Unpacker& operator >> (unsigned int& value);
-
-        /**
-         * Unpack a long.
-         **/
         Unpacker& operator >> (long& value);
-
-        /**
-         * Unpack a unsigned long.
-         **/
         Unpacker& operator >> (unsigned long& value);
-
-        /**
-         * Unpack a long long.
-         **/
         Unpacker& operator >> (long long& value);
-
-        /**
-         * Unpack an unsigned long long.
-         **/
         Unpacker& operator >> (unsigned long long& value);
-
-        /**
-         * Unpack a float.
-         **/
         Unpacker& operator >> (float& value);
-
-        /**
-         * Unpack a double.
-         **/
         Unpacker& operator >> (double& value);
-
-        /**
-         * Unpack a string.
-         **/
         Unpacker& operator >> (std::string& value);
+        //! @}
 
-        /**
-         * Unpack a pointer,
-         *
-         * @note To unpack polymorphic types you need to register them with
-         * the help of a Factorlet.
-         *
-         * @see Factorlet
-         **/
+        //! Unpack a pointer,
+        //!
+        //! @note To unpack polymorphic types you need to register them with
+        //! the help of a Factorlet.
+        //!
+        //! @see Factorlet
         template <typename Type>
         Unpacker& operator >> (Type*& value)
         {
@@ -175,12 +114,10 @@ namespace musli
 
     protected:
 
-        /**
-         * Read from the "physical" medium.
-         *
-         * This method does the actual reading. Each unpacker needs only
-         * to implement this method.
-         **/
+        //! Read from the "physical" medium.
+        //!
+        //! This method does the actual reading. Each unpacker needs only
+        //! to implement this method.
         virtual void read(char* data, unsigned int size) = 0;
 
     private:
@@ -191,9 +128,7 @@ namespace musli
         const Unpacker& operator = (const Unpacker&);
     };
 
-    /**
-     * Functor used to unpack single objects when unpacking STL containers.
-     **/
+    //! Functor used to unpack single objects when unpacking STL containers.
     struct unpack_single
     {
         Unpacker& unpacker;
@@ -208,9 +143,9 @@ namespace musli
         }
     };
 
-    /**
-     * Unpack a std::pair.
-     **/
+    //! Unpack STD containers and objects
+    //!
+    //! @{
     template <typename Type1, typename Type2>
     Unpacker& operator >> (Unpacker& unpacker, std::pair<Type1, Type2>& value)
     {
@@ -218,9 +153,6 @@ namespace musli
         return unpacker;
     }
 
-    /**
-     * Unpack a std::vector.
-     **/
     template <typename Type>
     Unpacker& operator >> (Unpacker& unpacker, std::vector<Type>& values)
     {
@@ -231,9 +163,6 @@ namespace musli
         return unpacker;
     }
 
-    /**
-     * Unpack a std::list.
-     **/
     template <typename Type>
     Unpacker& operator >> (Unpacker& unpacker, std::list<Type>& values)
     {
@@ -244,9 +173,6 @@ namespace musli
         return unpacker;
     }
 
-    /**
-     * Unpack a std::deque.
-     **/
     template <typename Type>
     Unpacker& operator >> (Unpacker& unpacker, std::deque<Type>& values)
     {
@@ -257,9 +183,6 @@ namespace musli
         return unpacker;
     }
 
-    /**
-     * Unpack std::set.
-     **/
     template <typename Type>
     Unpacker& operator >> (Unpacker& unpacker, std::set<Type>& values)
     {
@@ -276,9 +199,6 @@ namespace musli
         return unpacker;
     }
 
-    /**
-     * Unpack a std::map.
-     **/
     template <typename KeyType, typename ValueType>
     Unpacker& operator >> (Unpacker& unpacker, std::map<KeyType, ValueType>& values)
     {
@@ -294,6 +214,7 @@ namespace musli
         }
         return unpacker;
     }
+    //! @}
 }
 
 #endif

@@ -33,8 +33,6 @@ namespace musli
         read_pos = buffer.begin();
     }
 
-    MemoryUnpacker::~MemoryUnpacker() {}
-
     void MemoryUnpacker::read(char* data, unsigned int size)
     {
         std::vector<char>::const_iterator start = read_pos;
