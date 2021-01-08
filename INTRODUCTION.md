@@ -1,11 +1,10 @@
-A Quick Introduction to musli
-=============================
+# A Introduction to musli
+
 
 musli is a serialisation library that aims to be simple to use. This document 
 shows you how simple it is to use.
 
-Basic Concepts
---------------
+## Basic Concepts
 
 The design of musli borrows basic concepts from the iostream library. But instead
 of a stream you have a packer and instead of streaming objects you pack objects.
@@ -21,8 +20,7 @@ The term packing is used instead of serialisation because serialisation is a
 general term that describes many scenarios, including iostreams. By removing the
 word specific predefined notions can be removed.
 
-Packing Simple Data
--------------------
+## Packing Simple Data
 
 Packing simple data is completely trivial:
 
@@ -47,8 +45,7 @@ Unpacking is as simple:
     musli::MemoryUnpacker unpacker(buffer);
     unpacker >> some_int >> some_float >> some_string >> some_large_container;
 
-Packing Your Objects
---------------------
+## Packing Your Objects
 
 If you noticed a similarity to the iostream library, now you will really see it.
 
@@ -89,8 +86,7 @@ And unpacking:
 Of course you can also use a friend declaration to access the private members,
 just like the iostream library.
 
-Packing Pointers
-----------------
+# Packing Pointers
 
 Packing pointers to non polymorphic objects is as simple. You can have almost 
 any object layout. This includes directed graphs, acyclic graphs and cyclic 
@@ -98,8 +94,7 @@ graphs. The only limitation there is, is that the pointer has to point into heap
 memory and point to the head of an object. (These restrictions might be removed
 in the future.)
 
-Packing Polymorphic Objects
----------------------------
+# Packing Polymorphic Objects
 
 The only extra work you have to do is when you have polymorphic objects. That is
 objects that contain virtual methods and may be handled by the base class. In 
@@ -111,8 +106,7 @@ your code, like so:
 
     musli::Factorlet<MyType> my_type_factorlet;
 
-Caveats
--------
+## Caveats
 
 There are a few minor caveats you need to consider. 
 
