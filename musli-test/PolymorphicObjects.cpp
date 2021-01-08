@@ -118,13 +118,6 @@ struct DerivedB : public Base
 
 musli::Factorlet<DerivedB>  derivedb_factorlet;
 
-
-void delete_base(Base* obj)
-{
-    delete obj;
-}
-
-
 TEST(PolymorphicObjectTest, pack_objects)
 {
     std::vector<Base*> origs;
@@ -164,21 +157,77 @@ TEST(PolymorphicObjectTest, pack_objects)
     EXPECT_EQ(1, base->base_value);
 
     DerivedA* a = dynamic_cast<DerivedA*>(copies[1]);
-    EXPECT_TRUE(a != NULL);
+    EXPECT_TRUE(a != nullptr);
     EXPECT_EQ(2, a->base_value);
     EXPECT_EQ(3, a->a_value);
 
     DerivedAA* aa = dynamic_cast<DerivedAA*>(copies[2]);
-    EXPECT_TRUE(aa != NULL);
+    EXPECT_TRUE(aa != nullptr);
     EXPECT_EQ(4, aa->base_value);
     EXPECT_EQ(5, aa->a_value);
     EXPECT_EQ(6, aa->aa_value);
 
     DerivedB* b = dynamic_cast<DerivedB*>(copies[3]);
-    EXPECT_TRUE(b != NULL);
+    EXPECT_TRUE(b != nullptr);
     EXPECT_EQ(7, b->base_value);
     EXPECT_EQ(8, b->b_value);
 
-    std::for_each(origs.begin(), origs.end(), delete_base);
-    std::for_each(copies.begin(), copies.end(), delete_base);
+    std::for_each(origs.begin(), origs.end(), [] (auto& obj) { delete obj; });
+    std::for_each(copies.begin(), copies.end(), [] (auto& obj) { delete obj; });
+}
+
+
+TEST(PolymorphicObjectTest, pack_unique_objects)
+{
+    std::vector<std::unique_ptr<Base>> origs;
+    {
+        auto base = std::make_unique<Base>();
+        base->base_value = 1;
+        origs.push_back(std::move(base));
+
+        auto a = std::make_unique<DerivedA>();
+        a->base_value = 2;
+        a->a_value = 3;
+        origs.push_back(std::move(a));
+
+        auto aa = std::make_unique<DerivedAA>();
+        aa->base_value = 4;
+        aa->a_value = 5;
+        aa->aa_value = 6;
+        origs.push_back(std::move(aa));
+
+        auto b = std::make_unique<DerivedB>();
+        b->base_value = 7;
+        b->b_value = 8;
+        origs.push_back(std::move(b));
+    }
+
+    std::vector<char> buffer;
+    musli::MemoryPacker packer(buffer);
+    packer << origs;
+
+    std::vector<std::unique_ptr<Base>> copies;
+    musli::MemoryUnpacker unpacker(buffer);
+    unpacker >> copies;
+
+    EXPECT_EQ(4, copies.size());
+
+    auto base = copies[0].get();
+    EXPECT_EQ(1, base->base_value);
+
+    auto a = dynamic_cast<DerivedA*>(copies[1].get());
+    EXPECT_TRUE(a != nullptr);
+    EXPECT_EQ(2, a->base_value);
+    EXPECT_EQ(3, a->a_value);
+
+    auto aa = dynamic_cast<DerivedAA*>(copies[2].get());
+    EXPECT_TRUE(aa != nullptr);
+    EXPECT_EQ(4, aa->base_value);
+    EXPECT_EQ(5, aa->a_value);
+    EXPECT_EQ(6, aa->aa_value);
+
+    auto b = dynamic_cast<DerivedB*>(copies[3].get());
+    EXPECT_TRUE(b != nullptr);
+    EXPECT_EQ(7, b->base_value);
+    EXPECT_EQ(8, b->b_value);
 }

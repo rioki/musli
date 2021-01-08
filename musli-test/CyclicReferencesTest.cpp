@@ -53,7 +53,7 @@ musli::Unpacker& operator >> (musli::Unpacker& unpacker, Node& obj)
 }
 
 
-TEST(SimpleObjectTest, pack_objects)
+TEST(CyclicReferencesTest, pack_objects)
 {
     Node* root = new Node(0);
     root->ref = new Node(1);
@@ -76,3 +76,51 @@ TEST(SimpleObjectTest, pack_objects)
     delete copy->ref;
     delete copy;
 }
+
+
+struct SharedNode
+{
+    SharedNode()
+    : id(0xDEADBEEF) {}
+
+    SharedNode(unsigned int i)
+    : id(i) {}
+
+    unsigned int id;
+    std::weak_ptr<SharedNode> parent;
+    std::shared_ptr<SharedNode> child;
+};
+
+
+musli::Packer& operator << (musli::Packer& packer, const SharedNode& obj)
+{
+    packer << obj.id << obj.parent << obj.child;
+    return packer;
+}
+
+
+musli::Unpacker& operator >> (musli::Unpacker& unpacker, SharedNode& obj)
+{
+    unpacker >> obj.id >> obj.parent >> obj.child;
+    return unpacker;
+}
+
+TEST(CyclicReferencesTest, pack_shared_objects)
+{
+    auto root = std::make_shared<SharedNode>(0);
+    root->child = std::make_shared<SharedNode>(1);
+    root->child->parent = root;
+
+    std::vector<char> buffer;
+    musli::MemoryPacker packer(buffer);
+    packer << root;
+
+    std::shared_ptr<SharedNode> copy;
+    musli::MemoryUnpacker unpacker(buffer);
+    unpacker >> copy;
+
+    EXPECT_EQ(root->id, copy->id);
+    EXPECT_EQ(root->child->id, copy->child->id);
+    EXPECT_EQ(copy, copy->child->parent.lock());
+}
+

@@ -25,6 +25,7 @@
 #include "config.h"
 
 #include <algorithm>
+#include <memory>
 #include <string>
 #include <vector>
 #include <list>
@@ -77,19 +78,25 @@ namespace musli
         template <typename Type>
         Packer& operator << (Type* value)
         {
-            std::map<void*, unsigned int>::iterator iter;
-            iter = pointer_map.find(value);
-            if (iter != pointer_map.end())
+            if (value == nullptr)
             {
-                *this << iter->second;
+                *this << 0u;
             }
             else
             {
-                unsigned int id = last_pointer_id;
-                unsigned int type_id = factory.get_type_id(typeid(*value));
-                pointer_map[value] = id;
-                last_pointer_id++;
-                *this << id << type_id << *value;
+                auto iter = pointer_map.find(value);
+                if (iter != pointer_map.end())
+                {
+                    *this << iter->second;
+                }
+                else
+                {
+                    unsigned int id = last_pointer_id;
+                    unsigned int type_id = factory.get_type_id(typeid(*value));
+                    pointer_map[value] = id;
+                    last_pointer_id++;
+                    *this << id << type_id << *value;
+                }
             }
             return *this;
         }
@@ -105,25 +112,10 @@ namespace musli
     private:
         Factory& factory;
         std::map<void*, unsigned int> pointer_map;
-        unsigned int last_pointer_id;
+        unsigned int last_pointer_id = 1;
 
         Packer(const Packer&) = delete;
         const Packer& operator = (const Packer&) = delete;
-    };
-
-    //! Functor used to pack single objects when packing STL containers.
-    struct pack_single
-    {
-        Packer& packer;
-
-        pack_single(Packer& p)
-        : packer(p) {}
-
-        template <typename Type>
-        void operator () (Type type)
-        {
-            packer << type;
-        }
     };
 
     //! Pack STD containers and objects
@@ -132,7 +124,7 @@ namespace musli
     template <typename Type1, typename Type2>
     Packer& operator << (Packer& packer, const std::pair<Type1, Type2>& value)
     {
-        packer << value.first << value.second;
+       packer << value.first << value.second;
        return packer;
     }
 
@@ -141,7 +133,10 @@ namespace musli
     {
         unsigned int size = values.size();
         packer << size;
-        std::for_each(values.begin(), values.end(), pack_single(packer));
+        for (const auto& value : values)
+        {
+            packer << value;
+        }
         return packer;
     }
 
@@ -150,7 +145,10 @@ namespace musli
     {
         unsigned int size = values.size();
         packer << size;
-        std::for_each(values.begin(), values.end(), pack_single(packer));
+        for (const auto& value : values)
+        {
+            packer << value;
+        }
         return packer;
     }
 
@@ -159,7 +157,10 @@ namespace musli
     {
         unsigned int size = values.size();
         packer << size;
-        std::for_each(values.begin(), values.end(), pack_single(packer));
+        for (const auto& value : values)
+        {
+            packer << value;
+        }
         return packer;
     }
 
@@ -168,7 +169,10 @@ namespace musli
     {
         unsigned int size = values.size();
         packer << size;
-        std::for_each(values.begin(), values.end(), pack_single(packer));
+        for (const auto& value : values)
+        {
+            packer << value;
+        }
         return packer;
     }
 
@@ -177,7 +181,31 @@ namespace musli
     {
         unsigned int size = values.size();
         packer << size;
-        std::for_each(values.begin(), values.end(), pack_single(packer));
+        for (const auto& value : values)
+        {
+            packer << value;
+        }
+        return packer;
+    }
+
+    template <typename Type>
+    Packer& operator << (Packer& packer, const std::shared_ptr<Type>& value)
+    {
+        packer << value.get();
+        return packer;
+    }
+
+    template <typename Type>
+    Packer& operator << (Packer& packer, const std::weak_ptr<Type>& value)
+    {
+        packer << value.lock().get(); // this can be nullptr
+        return packer;
+    }
+
+    template <typename Type>
+    Packer& operator << (Packer& packer, const std::unique_ptr<Type>& value)
+    {
+        packer << value.get();
         return packer;
     }
     //! @}

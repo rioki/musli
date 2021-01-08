@@ -25,6 +25,7 @@
 #include "config.h"
 
 #include <algorithm>
+#include <memory>
 #include <string>
 #include <vector>
 #include <list>
@@ -82,32 +83,65 @@ namespace musli
         {
             unsigned int id = 0;
             *this >> id;
-            if (id < pointer_map.size())
+            if (id == 0u)
             {
-                value = static_cast<Type*>(pointer_map[id]);
+                value = nullptr;
             }
             else
             {
-                unsigned int type_id = 0;
-                *this >> type_id;
-
-                if (type_id == 0)
+                id -= 1;
+                if (id < pointer_map.size())
                 {
-                    value = new Type;
+                    value = static_cast<Type*>(pointer_map[id]);
                 }
                 else
                 {
-                    value = reinterpret_cast<Type*>(factory.create(type_id));
+                    unsigned int type_id = 0;
+                    *this >> type_id;
+
+                    if (type_id == 0)
+                    {
+                        value = new Type;
+                    }
+                    else
+                    {
+                        value = reinterpret_cast<Type*>(factory.create(type_id));
+                    }
+
+                    if (id != pointer_map.size())
+                    {
+                        throw std::logic_error("Invalid pointer id.");
+                    }
+
+                    pointer_map.push_back(value);
+
+                    *this >> *value;
                 }
+            }
+            return *this;
+        }
 
-                if (id != pointer_map.size())
-                {
-                    throw std::logic_error("Invalid pointer id.");
-                }
+        //! Unpack a shared pointer,
+        //!
+        //! @note To unpack polymorphic types you need to register them with
+        //! the help of a Factorlet.
+        //!
+        //! @see Factorlet
+        template <typename Type>
+        Unpacker& operator >> (std::shared_ptr<Type>& value)
+        {
+            Type* ptr = nullptr;
+            *this >> ptr;
 
-                pointer_map.push_back(value);
-
-                *this >> *value;
+            auto i = find_if(begin(shared_pointers), end(shared_pointers), [&] (auto& sptr) { return sptr.get() == ptr; });
+            if (i != end(shared_pointers))
+            {
+                value = std::reinterpret_pointer_cast<Type>(*i);
+            }
+            else
+            {
+                value = std::shared_ptr<Type>(ptr);
+                shared_pointers.push_back(value);
             }
             return *this;
         }
@@ -123,24 +157,10 @@ namespace musli
     private:
         Factory& factory;
         std::vector<void*> pointer_map;
+        std::list<std::shared_ptr<void>> shared_pointers;
 
         Unpacker(const Unpacker&);
         const Unpacker& operator = (const Unpacker&);
-    };
-
-    //! Functor used to unpack single objects when unpacking STL containers.
-    struct unpack_single
-    {
-        Unpacker& unpacker;
-
-        unpack_single(Unpacker& u)
-        : unpacker(u) {}
-
-        template <typename Type>
-        void operator () (Type& type)
-        {
-            unpacker >> type;
-        }
     };
 
     //! Unpack STD containers and objects
@@ -159,7 +179,10 @@ namespace musli
         unsigned int size;
         unpacker >> size;
         values.resize(size);
-        std::for_each(values.begin(), values.end(), unpack_single(unpacker));
+        for (auto& value : values)
+        {
+            unpacker >> value;
+        }
         return unpacker;
     }
 
@@ -169,7 +192,10 @@ namespace musli
         unsigned int size;
         unpacker >> size;
         values.resize(size);
-        std::for_each(values.begin(), values.end(), unpack_single(unpacker));
+        for (auto& value : values)
+        {
+            unpacker >> value;
+        }
         return unpacker;
     }
 
@@ -179,7 +205,10 @@ namespace musli
         unsigned int size;
         unpacker >> size;
         values.resize(size);
-        std::for_each(values.begin(), values.end(), unpack_single(unpacker));
+        for (auto& value : values)
+        {
+            unpacker >> value;
+        }
         return unpacker;
     }
 
@@ -212,6 +241,28 @@ namespace musli
             unpacker >> value;
             values.insert(value);
         }
+        return unpacker;
+    }
+
+    template <typename Type>
+    Unpacker& operator >> (Unpacker& unpacker, std::weak_ptr<Type>& value)
+    {
+        std::shared_ptr<Type> ptr;
+        unpacker >> ptr;
+        value = ptr;
+        return unpacker;
+    }
+
+    template <typename Type>
+    Unpacker& operator >> (Unpacker& unpacker, std::unique_ptr<Type>& value)
+    {
+        // NOTE:
+        // Although we know this pointer is unique, we don't know if the pointer
+        // may be use as a non authoritative reference somewhere else.
+        // Thus we need to assume it is shared and can't create the object with make_unique.
+        Type* ptr = nullptr;
+        unpacker >> ptr;
+        value = std::unique_ptr<Type>(ptr);
         return unpacker;
     }
     //! @}

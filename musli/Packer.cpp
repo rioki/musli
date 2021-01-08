@@ -24,7 +24,7 @@
 namespace musli
 {
     Packer::Packer()
-    : factory(Factory::get_instance()), last_pointer_id(0) {}
+    : factory(Factory::get_instance()) {}
 
     Packer& Packer::operator << (bool value)
     {
